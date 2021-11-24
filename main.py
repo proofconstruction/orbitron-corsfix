@@ -2,12 +2,22 @@
 from neighbor.service import NeighborService
 
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 service = NeighborService()
 service.storage.connect()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/nearest/{count}/{sourceType}/to/{postalCode}")
 async def nearest(count: int, sourceType: str, postalCode: str):
